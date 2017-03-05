@@ -12,7 +12,7 @@ var imgRes = Q.defer();
 var objRes = Q.defer();
 var fbRes = Q.defer();
 
-var fbToken = 'EAACEdEose0cBALlDqbXAan78ZBp8ReRKH2naOTOAUCuZBHPauj7euJVAUbv5frUajbWZAWGFsVxhNaJHVOoENNYZAKWaCEjOqHnLBR6Ua9FHpLHeIVPiZBoZBWTrPwTFHwxWezwrnVXDfzm1EgKgZCCBiFIyiEZCyMjIivofYvHE4LiJhVN9bTBsn6nHeXbvD9cZD';
+var fbToken = 'EAACEdEose0cBAJR2F5lXKAMR1gIPM3NTDU5fTD6AAwzSqtOdrdxQMT0wlEiYQpe6nbSVQOZBp1hmWV5mjLPwQTA4ZAJy4vZA4jEBdDbuwbY6qZAMniIZAZCifNgpuZC2SGB4Gfvd88TJ87a01Lb7U2uFZBP1lR1zZB6UnQvj52vEvj3ZAByN3azqRhPvhdZBhnIDG0ZD';
 
 //promise for firebase
 var picReady = Q.defer(); //promise to wait for picture to be uploaded
