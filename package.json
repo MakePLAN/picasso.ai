@@ -1,0 +1,19 @@
+{
+  "name": "holosketch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.7.0",
+    "form-data": "^2.1.2",
+    "node-rest-client": "^3.0.3",
+    "q": "^1.4.1",
+    "restify": "^4.3.0",
+    "sleep": "^5.1.0"
+  }
+}
