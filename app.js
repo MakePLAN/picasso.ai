@@ -3,71 +3,6 @@ const builder = require('botbuilder')
 const config = require('./config.js')
 var Q = require('q');
 var request = require('request')
-
-
-/*
-//
-// socket server
-//
-var net = require('net');
-
-var HOST = '10.5.0.10';
-var PORT = 9999;
-
-net.createServer(function(sock) {
-    
-    // We have a connection - a socket object is assigned to the connection automatically
-    console.log('CONNECTED: ' + sock.remoteAddress +':'+ sock.remotePort);
-    
-    // Add a 'data' event handler to this instance of socket
-    sock.on('data', function(data) {
-        
-        console.log('DATA ' + sock.remoteAddress + ': ' + data);
-        // Write the data back to the socket, the client will receive it as data from the server
-        //sock.write('You said "' + data + '"');
-        
-    });
-    
-    // Add a 'close' event handler to this instance of socket
-    sock.on('close', function(data) {
-        console.log('CLOSED: ' + sock.remoteAddress +' '+ sock.remotePort);
-    });
-    
-}).listen(PORT, HOST);
-
-console.log('Server listening on ' + HOST +':'+ PORT);
-
-//
-//  socket client
-//
-var HOST1 = '10.5.0.10';
-var PORT1 = 9999;
-
-var client = new net.Socket();
-client.connect(PORT1, HOST1, function() {
-
-    console.log('CONNECTED TO: ' + HOST1 + ':' + PORT1);
-    // Write a message to the socket as soon as the client is connected, the server will receive it as message from the client 
-    //client.write('I am Chuck Norris!');
-
-});
-
-// Add a 'data' event handler for the client socket
-// data is what the server sent to this socket
-client.on('data', function(data) {
-    
-    console.log('DATA: ' + data);
-    // Close the client socket completely
-    client.destroy();
-    
-});
-
-// Add a 'close' event handler for the client socket
-client.on('close', function() {
-    console.log('Connection closed');
-});
-
-*/
 //
 //    Bot stuff
 //
@@ -76,6 +11,36 @@ var concepts = ['Car', 'Campfire', 'Windmill', 'Hammer'];
 var imgRes = Q.defer();
 var objRes = Q.defer();
 var fbRes = Q.defer();
+
+//promise for firebase
+var picReady = Q.defer(); //promise to wait for picture to be uploaded
+
+//Firebase stuff
+var admin = require('firebase-admin');
+var serviceAccount = require("./secret.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://holosketch-a7db7.firebaseio.com/"
+});
+
+// Get a database reference to our posts
+var db = admin.database();
+var ref = db.ref("storage");
+
+// Attach an asynchronous callback to read the data at our posts reference
+ref.on("child_changed", function(snapshot) {
+
+  if (snapshot.key == "picTaken" && snapshot.val() == 0){
+    picReady.resolve(true)
+  //call api 
+  }
+  //console.log(snapshot.key);
+  //console.log(snapshot.val());
+
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
+});
 
 // Connection to Microsoft Bot Framework
 const connector = new builder.ChatConnector({
@@ -86,6 +51,7 @@ const bot = new builder.UniversalBot(connector)
 // Event when Message received
 bot.dialog('/', (session) => {
   //console.log(session.message.text)
+  
   var card = createImageCard(session, "Welcome back, Ben!", 'https://s-media-cache-ak0.pinimg.com/originals/e6/b7/33/e6b733e17b68a922253ca0f0428a569e.gif');
   var msg = new builder.Message(session).addAttachment(card);
   session.send(msg);
@@ -168,6 +134,7 @@ bot.dialog('/waiting', (session) => {
 
 bot.beginDialogAction('result', '/result');
 bot.dialog('/result', (session) => {
+  updatePicTaken();
   //console.log(session.message.text)
   var card = createImageCard(session, "Analyzing...", 'https://media.giphy.com/media/9fbYYzdf6BbQA/giphy.gif');
   var msg = new builder.Message(session).addAttachment(card);
@@ -182,13 +149,18 @@ bot.dialog('/result', (session) => {
 
   //analyzing the image
   
-  imageVisionAPI(picLink);
-  session.send("I see that you draw...");
-  objRes.promise.done(function(res){
-    objRes = Q.defer()
-    session.send(res + "!");
-    session.replaceDialog('/social');
-  });
+  picReady.promise.done(function(){
+    picReady = Q.defer();
+    imageVisionAPI(picLink);
+    session.send("I see that you draw...");
+    objRes.promise.done(function(res){
+      objRes = Q.defer()
+      session.send(res + "!");
+      session.replaceDialog('/social');
+    });
+  })
+
+  
 })
 
 bot.dialog('/social', (session) => {
@@ -361,6 +333,8 @@ request.post({url:'http://demo.nanonets.ai/ImageCategorization/Label/', formData
       res = choices[i].label;
     }
   }
+
+  updateObj(res);
   objRes.resolve(res);
   //console.log("Answer: ", res);
 
@@ -398,6 +372,19 @@ function fbPostAPI(picLink){
   fbRes.resolve(true);
 
 }
+
+function updateObj(objectName){
+  ref.update({
+    "object": objectName
+  });
+}
+
+function updatePicTaken(){
+  ref.update({
+    "picTaken": 1
+  });
+}
+
 
 
 // Server Init for bot
