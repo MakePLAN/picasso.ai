@@ -52,9 +52,13 @@ const bot = new builder.UniversalBot(connector)
 bot.dialog('/', (session) => {
   //console.log(session.message.text)
   
+  
   var card = createImageCard(session, "Welcome back, Ben!", 'https://s-media-cache-ak0.pinimg.com/originals/e6/b7/33/e6b733e17b68a922253ca0f0428a569e.gif');
   var msg = new builder.Message(session).addAttachment(card);
   session.send(msg);
+  
+
+
   session.replaceDialog('/greeting');
 })
 
@@ -140,19 +144,22 @@ bot.dialog('/result', (session) => {
   var msg = new builder.Message(session).addAttachment(card);
   session.send(msg);
 
-  picLink = 'https://prescribe.blob.core.windows.net/sketches/hammer.png'; //link for the picture 
-  session.userData.picLink = picLink;
-
-  var card = createImageCard(session, "", picLink);
-  var msg = new builder.Message(session).addAttachment(card);
-  session.send(msg);
+  
 
   //analyzing the image
   
   picReady.promise.done(function(){
+    picLink = 'https://prescribe.blob.core.windows.net/sketches/sketch.png'; //link for the picture 
+    //picLink = 'https://firebasestorage.googleapis.com/v0/b/holosketch-a7db7.appspot.com/o/sketch%20(9).png?alt=media&token=feb33f50-ea20-4ecb-8399-19ddfdc6dc66';
+    session.userData.picLink = picLink;
+    session.send("I see that you draw...");
+    var card = createImageCard(session, "", picLink);
+    var msg = new builder.Message(session).addAttachment(card);
+    session.send(msg);
+
     picReady = Q.defer();
     imageVisionAPI(picLink);
-    session.send("I see that you draw...");
+    
     objRes.promise.done(function(res){
       objRes = Q.defer()
       session.send(res + "!");
@@ -275,6 +282,14 @@ function createVideoCard(session) {
         .buttons([
             builder.CardAction.openUrl(session, 'https://peach.blender.org/', 'Learn More')
         ]);
+}
+
+function createThumbnailCard(session) {
+    return new builder.ThumbnailCard(session)
+        .images([
+            builder.CardImage.create(session, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
+        ])
+        
 }
 
 function randomNum () {
