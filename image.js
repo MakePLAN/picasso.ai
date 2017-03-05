@@ -1,6 +1,6 @@
 var request = require('request')
 var picLink = "https://prescribe.blob.core.windows.net/sketches/sketch.png"
-data = {'url': picLink , "appId":("", "14604c7e-062d-4e5e-be44-fc3560c63d2f")}
+data = {'url': picLink , "appId":("", "a8fedc0d-940b-475d-ab5b-a33a18e6b9df")}
 
 request.post({url:'http://demo.nanonets.ai/ImageCategorization/Label/', formData: data}, function optionalCallback(err, httpResponse, body) {
   if (err) {

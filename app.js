@@ -12,7 +12,7 @@ var imgRes = Q.defer();
 var objRes = Q.defer();
 var fbRes = Q.defer();
 
-var fbToken = 'EAACEdEose0cBAA1LgA1LYUIlfUSf2692VQqBhxoFodTV7EzTJWee17ZBLb2iO6JcFYTQRZCIP5uQWZBNG3VsSyQ903zBIgZAvj4YgbC2XoO0CiD4C6fTk4wVNzrpHC0WXcTZAbJGOPIYuZAq1VghVC3DFLqAnN5cVgOzxpRhCIxpwaRdpFiaoa50z8VVIlHzkZD';
+var fbToken = 'EAACEdEose0cBALlDqbXAan78ZBp8ReRKH2naOTOAUCuZBHPauj7euJVAUbv5frUajbWZAWGFsVxhNaJHVOoENNYZAKWaCEjOqHnLBR6Ua9FHpLHeIVPiZBoZBWTrPwTFHwxWezwrnVXDfzm1EgKgZCCBiFIyiEZCyMjIivofYvHE4LiJhVN9bTBsn6nHeXbvD9cZD';
 
 //promise for firebase
 var picReady = Q.defer(); //promise to wait for picture to be uploaded
@@ -331,7 +331,7 @@ function callImageAPI(word, num){
 }
 
 function imageVisionAPI(picLink){
-  data = {'url': picLink , "appId":("", "14604c7e-062d-4e5e-be44-fc3560c63d2f")}
+  data = {'url': picLink , "appId":("", "a8fedc0d-940b-475d-ab5b-a33a18e6b9df")}
 
 request.post({url:'http://demo.nanonets.ai/ImageCategorization/Label/', formData: data}, function optionalCallback(err, httpResponse, body) {
   if (err) {
@@ -343,17 +343,19 @@ request.post({url:'http://demo.nanonets.ai/ImageCategorization/Label/', formData
 
   max = choices[0].probability;
   res = choices[0].label;
+  console.log(choices[0].label , ": ",  choices[0].probability  )
 
   for (i = 1; i < choices.length; i++){
     if (max < choices[i].probability ){
       max = choices[i].probability;
       res = choices[i].label;
     }
+    console.log(choices[i].label , ": ",  choices[i].probability  )
   }
 
   updateObj(res);
   objRes.resolve(res);
-  //console.log("Answer: ", res);
+  console.log("Answer: ", res);
 
 })
 
