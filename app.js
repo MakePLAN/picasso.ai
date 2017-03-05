@@ -12,6 +12,8 @@ var imgRes = Q.defer();
 var objRes = Q.defer();
 var fbRes = Q.defer();
 
+var fbToken = 'EAACEdEose0cBAA1LgA1LYUIlfUSf2692VQqBhxoFodTV7EzTJWee17ZBLb2iO6JcFYTQRZCIP5uQWZBNG3VsSyQ903zBIgZAvj4YgbC2XoO0CiD4C6fTk4wVNzrpHC0WXcTZAbJGOPIYuZAq1VghVC3DFLqAnN5cVgOzxpRhCIxpwaRdpFiaoa50z8VVIlHzkZD';
+
 //promise for firebase
 var picReady = Q.defer(); //promise to wait for picture to be uploaded
 
@@ -153,7 +155,7 @@ bot.dialog('/result', (session) => {
     //picLink = 'https://firebasestorage.googleapis.com/v0/b/holosketch-a7db7.appspot.com/o/sketch%20(9).png?alt=media&token=feb33f50-ea20-4ecb-8399-19ddfdc6dc66';
     session.userData.picLink = picLink;
     session.send("I see that you draw...");
-    var card = createImageCard(session, "", picLink);
+    var card = createWordCard(session, "Click here to view", picLink);
     var msg = new builder.Message(session).addAttachment(card);
     session.send(msg);
 
@@ -284,11 +286,11 @@ function createVideoCard(session) {
         ]);
 }
 
-function createThumbnailCard(session) {
+function createWordCard(session, title, pictureLink) {
     return new builder.ThumbnailCard(session)
-        .images([
-            builder.CardImage.create(session, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
-        ])
+        .buttons([
+            builder.CardAction.openUrl(session, pictureLink, title)
+        ]);
         
 }
 
@@ -364,7 +366,7 @@ function fbPostAPI(picLink){
 
   var form = new FormData(); //Create multipart form
 
-  var access_token = 'EAACEdEose0cBANL8eIak6tm8fDtKGvsyzHV3BO4jGBkOorSPqseegB9PiOWtUMJAnbf9PSZBzOz3NnJEWJ9c0FSClk0ZB7i5bO9dnFI15PUD8BrYarxAibCaASfNlTYoXILZCSjyicNxoZAUbeRCwY1j0izYZArnJtGGnCZAZB5xIhJ7HPqshzfvpBagRdI3x4ZD',
+  var access_token = fbToken,
     pageid = 'me',
     fburl = 'https://graph.facebook.com/'
             + pageid
@@ -380,7 +382,7 @@ function fbPostAPI(picLink){
   });
   form = req.form()
   // append a normal literal text field ...
-  form.append('message', 'Posting from Picasso');
+  form.append('message', 'Posting from HoloSketch');
   // or append the contents of a remote url ...
   form.append('source', request(picLink) ) ;
 
