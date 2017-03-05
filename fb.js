@@ -6,7 +6,7 @@ var https = require('https'); //Https module of Node.js
   var form = new FormData(); //Create multipart form
 
 
-  var access_token = 'EAACEdEose0cBALlDqbXAan78ZBp8ReRKH2naOTOAUCuZBHPauj7euJVAUbv5frUajbWZAWGFsVxhNaJHVOoENNYZAKWaCEjOqHnLBR6Ua9FHpLHeIVPiZBoZBWTrPwTFHwxWezwrnVXDfzm1EgKgZCCBiFIyiEZCyMjIivofYvHE4LiJhVN9bTBsn6nHeXbvD9cZD',
+  var access_token = 'EAACEdEose0cBALChZC1UZAs2ILzFloPLzYjs7TPcX7ZBpSN4JRhWxsIOysEL8ZAZBPU1L0Ye13Bg4lrHztQ9EZBKaw1RnsGK8TzPRAo9d2wwZCEXhbT14yiQWCZB7GzrDgFtDSkEn3rTDywOMhCxae5ckTSG4y0NZCO09tp0NjfZCXG1ZCiNdaFEZCrssXLfIObfbZCgZD',
     pageid = 'me',
     fburl = 'https://graph.facebook.com/'
             + pageid

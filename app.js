@@ -12,7 +12,7 @@ var imgRes = Q.defer();
 var objRes = Q.defer();
 var fbRes = Q.defer();
 
-var fbToken = 'EAACEdEose0cBAJR2F5lXKAMR1gIPM3NTDU5fTD6AAwzSqtOdrdxQMT0wlEiYQpe6nbSVQOZBp1hmWV5mjLPwQTA4ZAJy4vZA4jEBdDbuwbY6qZAMniIZAZCifNgpuZC2SGB4Gfvd88TJ87a01Lb7U2uFZBP1lR1zZB6UnQvj52vEvj3ZAByN3azqRhPvhdZBhnIDG0ZD';
+var fbToken = 'EAACEdEose0cBALChZC1UZAs2ILzFloPLzYjs7TPcX7ZBpSN4JRhWxsIOysEL8ZAZBPU1L0Ye13Bg4lrHztQ9EZBKaw1RnsGK8TzPRAo9d2wwZCEXhbT14yiQWCZB7GzrDgFtDSkEn3rTDywOMhCxae5ckTSG4y0NZCO09tp0NjfZCXG1ZCiNdaFEZCrssXLfIObfbZCgZD';
 
 //promise for firebase
 var picReady = Q.defer(); //promise to wait for picture to be uploaded
@@ -351,6 +351,9 @@ request.post({url:'http://demo.nanonets.ai/ImageCategorization/Label/', formData
       res = choices[i].label;
     }
     console.log(choices[i].label , ": ",  choices[i].probability  )
+  }
+  if (res == "fire"){
+    res = "camp" + res;
   }
 
   updateObj(res);
